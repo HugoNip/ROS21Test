@@ -16,7 +16,7 @@
 #include <turtlesim/Spawn.h>
 
 int main(int argc, char **argv) {
-	
+
 	ros::init(argc, argv, "my_tf_listener");
 
 	ros::NodeHandle node;
@@ -99,6 +99,8 @@ int main(int argc, char **argv) {
 			continue;
 		}
 
+		// ======================= have got transoform ===========================
+		
 		/**
 		 * publish order base on this relationship
 		 * Here, the transform is used to calculate new linear and angular velocities 

@@ -20,25 +20,26 @@ std::string turtle_name;
 void poseCallback(const turtlesim::PoseConstPtr& msg)
 {
 	/**
-	 * create a TransformBroadcaster object 
+	 * step1: create a TransformBroadcaster object 
 	 * that we'll use later to send the transformations over the wire.
 	 */
 	static tf::TransformBroadcaster br;
 
 	/**
-	 * create a Transform object
+	 * step2: create a Transform object
 	 * copy the information from the 2D turtle pose into the 3D transform.
 	 */
 	tf::Transform transform;
+	// translation
 	transform.setOrigin(tf::Vector3(msg->x, msg->y, 0.0));
 
-	// Here we set the rotation.
+	// rotation.
 	tf::Quaternion q;
 	q.setRPY(0, 0, msg->theta);	
 	transform.setRotation(q);
 
 	/**
-	 * broadcast tf data between world and turtle
+	 * step3: broadcast tf data between world and turtle
 	 * 
 	 * This is where the real work is done. 
 	 * 
@@ -57,6 +58,11 @@ void poseCallback(const turtlesim::PoseConstPtr& msg)
 
 int main(int argc, char **argv)
 {
+	/**
+	 * terminal:
+	 * rosrun learning_tf turtle1_tf_broadcaster __name:=turtle_tf_broadcaster /turtle1
+	 * rosrun learning_tf turtle2_tf_broadcaster __name:=turtle_tf_broadcaster /turtle2
+	 */
 	ros::init(argc, argv, "my_tf_broadcaster");
 
 	if (argc != 2)

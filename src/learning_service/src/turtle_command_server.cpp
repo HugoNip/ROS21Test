@@ -109,6 +109,8 @@ int main(int argc, char **argv)
 
 
     // create a publisher to make the turtle move
+    // control velocity
+    // command velocity
     turtle_vel_pub = n.advertise<geometry_msgs::Twist>("/turtle1/cmd_vel", 10);
 
     // 
