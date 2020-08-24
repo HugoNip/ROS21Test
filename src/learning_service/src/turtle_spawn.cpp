@@ -1,6 +1,27 @@
 #include <ros/ros.h>
 #include <turtlesim/Spawn.h>
 
+/**
+ * ROS Services are defined by srv files, which contains 
+ * a request message and a response message. 
+ * 
+ * These are identical to the messages used with ROS Topics. 
+ * 
+ * roscpp converts these srv files into C++ source code and 
+ * creates three classes that you need to be familiar with: 
+ * service definitions, request messages, and response messages. 
+ * 
+ * The names of these classes come directly from the srv filename:
+ * my_package/srv/Foo.srv ->
+ * 		my_package::Foo
+ * 		my_package::Foo::Request
+ * 		my_package::Foo::Response
+ * 
+ * The Request class provides the input to the service. 
+ * The Response class is returned to the client as the service's output.
+ * 
+ */
+
 int main(int argc, char **argv)
 {
 	ros::init(argc, argv, "turtle_spawn"); // node name
@@ -13,10 +34,33 @@ int main(int argc, char **argv)
 	ros::service::waitForService("/spwan"); // service name
 
 	/**
+	 * service name: "/spawn"
+	 * 
 	 * This creates a client for the **"spwan" service**.
 	 * The ros::ServiceClient object is used to call the service later on.
 	 * 
 	 * connect the client to the service of /spawn
+	 * 
+	 * 
+	 * 
+	 * ROS also allows for persistent connections to services. 
+	 * With a persistent connection, a client stays connected to a service. 
+	 * Otherwise, a client normally does a lookup and reconnects to a service each time. 
+	 * This potentially allows for a client to connect to a different node each time 
+	 * it does a service call, assuming the lookup returns a different node.
+	 * 
+	 * Persistent connections should be used carefully. They greatly improve performance 
+	 * for repeated requests, but they also make your client more fragile to service failures. 
+	 * Clients using persistent connections should implement their own reconnection logic 
+	 * in the event that the persistent connection fails.
+	 * 
+	 * You can create a persistent connection by using the optional second argument to 
+	 * ros::NodeHandle::serviceClient():
+	 * ros::ServiceClient client = nh.serviceClient<my_package::Foo>("my_service_name", true);
+	 * 
+	 * ros::ServiceClient handles are reference counted internally, so they can be copied and 
+	 * once the last copy is destroyed the persistent connection will drop. You may also manually 
+	 * shutdown the connection with the ros::ServiceClient::shutdown() method.
 	 */
 	ros::ServiceClient add_turtle = node.serviceClient<turtlesim::Spawn>("spawn");
 

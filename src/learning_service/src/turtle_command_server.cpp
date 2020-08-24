@@ -17,6 +17,21 @@ bool pubCommand = false;
 /**
  * This function provides the service, 
  * it takes in the request and response type defined in the srv file and returns a boolean.
+ * 
+ * -------------------------------------------------------------------------
+ * Callback Signature
+ * 
+ * The signature of the service callback is:
+ * 
+ * bool callback(MReq& request, MRes& response);
+ * 
+ * where MReq and MRes match the request/response types provided to advertiseService(). 
+ * 
+ * A return value of true means the service succeeded, and 
+ * the response object has been filled with the necessary data. 
+ * 
+ * A return value of false means the call has failed and 
+ * the response object will not be sent to the caller.
  */
 bool commandCallback(std_srvs::Trigger::Request &req,
                      std_srvs::Trigger::Response &res) {
@@ -40,6 +55,7 @@ bool commandCallback(std_srvs::Trigger::Request &req,
 
 int main(int argc, char **argv)
 {
+    // server node name
     ros::init(argc, argv, "tutle_command_server");
 
     ros::NodeHandle n;
@@ -47,9 +63,50 @@ int main(int argc, char **argv)
     /**
      * Here the service is created and advertised over ROS.
      * 
+     * service name: "/turtle_command"
+     * 
      * command: rosrun call /turtle_command "{}"
+     * 
+     * 
+     * In roscpp you provide a service by creating a ros::ServiceServer through the 
+     * ros::NodeHandle::advertiseService() method. 
+     * 
+     * advertiseService() works very similar to how the subscribe() method works, 
+     * in that you provide a service name and a callback to be invoked when the service is called.
+     * 
+     * 
+     * 
+     * 
+     * 3.1 Options
+     * There are a number of different versions of advertiseService(), 
+     * for different types of callbacks, but the general signature is:
+     * 
+     * template<class MReq, class MRes>
+     * ros::ServiceServer nh.advertiseService(const std::string& service, <callback>);
+     * 
+     * MReq [usually unnecessary]
+     * This is a template argument specifying the request message type. 
+     * For most versions you do not need to explicitly define this, 
+     * as the compiler can deduce it from the callback function.
+     * 
+     * MRes [usually unnecessary]
+     * This is a template argument specifying the response message type. 
+     * For most versions you do not need to explicitly define this, 
+     * as the compiler can deduce it from the callback function.
+     * 
+     * service
+     * The name of the service to provide
+     * 
+     * <callback>
+     * The callback to invoke when a request has arrived
      */
     ros::ServiceServer command_service = n.advertiseService("/turtle_command", commandCallback);
+
+
+    // the service is get the response of "pubCommand": true/false.
+    // ===============================================================
+    // then using this value to publish/stop publishing the message...
+
 
     // create a publisher to make the turtle move
     turtle_vel_pub = n.advertise<geometry_msgs::Twist>("/turtle1/cmd_vel", 10);

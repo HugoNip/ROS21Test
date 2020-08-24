@@ -164,7 +164,7 @@ int main(int argc, char **argv) {
         /**
          * step 4: publish message
          * 
-         * The publish() function is how you send messages. 
+         * The publish() function is how you send messages.
          * The parameter is the message object.
          * 
          * The type of this object must agree with the type given as a template parameter 
